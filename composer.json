@@ -1,0 +1,20 @@
+{
+  "name": "telesink/telesink",
+  "description": "Official PHP client for telesink.com – real-time event tracking",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kyrylo Silin",
+      "email": "kyrylo@telesink.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Telesink\\": "src/"
+    }
+  }
+}
