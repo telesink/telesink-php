@@ -16,21 +16,23 @@ class Telesink
      *   @var array|null $properties   Optional. Extra data.
      *   @var string|null $occurred_at / $occurredAt  Optional. ISO8601 timestamp (defaults to now).
      *   @var string|null $idempotency_key / $idempotencyKey  Optional. Custom key (defaults to UUIDv4).
+     *   @var string|null $endpoint    Optional. Override TELESINK_ENDPOINT env var.
      * }
      * @return bool true on success, false on disabled / missing endpoint / network error
      */
     public static function track(array $params): bool
     {
-        if (!self::isEnabled() || !self::getEndpoint()) {
-            return false;
-        }
-
         $event           = $params['event']           ?? null;
         $text            = $params['text']            ?? null;
         $emoji           = $params['emoji']           ?? null;
         $properties      = $params['properties']      ?? [];
         $occurredAt      = $params['occurred_at'] ?? $params['occurredAt'] ?? null;
         $idempotencyKey  = $params['idempotency_key'] ?? $params['idempotencyKey'] ?? null;
+        $endpoint        = $params['endpoint'] ?? null;
+
+        if (!self::isEnabled() || !($endpoint ?? self::getEndpoint())) {
+            return false;
+        }
 
         if (!$event || !$text) {
             self::logError('[Telesink] event and text are required');
@@ -52,15 +54,14 @@ class Telesink
             ],
         ];
 
-        // Remove null values (matches Ruby .compact behavior)
         $payload = array_filter($payload, fn($v) => $v !== null);
 
-        return self::post($payload, $payload['idempotency_key']);
+        return self::post($payload, $payload['idempotency_key'], $endpoint ?? self::getEndpoint());
     }
 
-    private static function post(array $payload, string $idempotencyKey): bool
+    private static function post(array $payload, string $idempotencyKey, ?string $endpoint = null): bool
     {
-        $ch = curl_init(self::getEndpoint());
+        $ch = curl_init($endpoint ?? self::getEndpoint());
 
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload, JSON_UNESCAPED_SLASHES));

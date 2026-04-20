@@ -40,6 +40,21 @@ Telesink::track([
 ]);
 ```
 
+**Optional: Sending to a different sink**
+
+You can send events to a different sink by passing an `endpoint` key (falls back
+to `TELESINK_ENDPOINT` if not set):
+
+```php
+Telesink::track([
+    'event'      => 'Job succeeded',
+    'text'       => 'ProcessUserData',
+    'emoji'      => '✅',
+    'properties' => ['duration_ms' => 420],
+    'endpoint'   => $_ENV['TELESINK_TEST_ENDPOINT'] ?? null,
+]);
+```
+
 ### License
 
 MIT (see [LICENSE.md](/LICENSE.md)).
