@@ -4,7 +4,7 @@ namespace Telesink;
 
 class Telesink
 {
-    private const VERSION = '1.0.0';
+    private const VERSION = '1.1.0';
 
     /**
      * Send an event to Telesink.
