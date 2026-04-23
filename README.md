@@ -15,7 +15,7 @@ composer require telesink/telesink
 ## Configuration
 
 ```bash
-export TELESINK_ENDPOINT=https://app.telesink.com/api/v1/sinks/your_sink_token_here/events
+export TELESINK_ENDPOINT="https://app.telesink.com/api/v1/sinks/your_sink_token_here/events"
 ```
 
 To disable tracking (e.g. in tests or development):
